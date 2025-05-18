@@ -1,5 +1,7 @@
 :root{
---theme-color: #e2dec6;
+--theme-color: #ffffff;
+font-family: fantasy;
+
 }
 
 html {
@@ -13,24 +15,33 @@ html {
     margin: 0;
     padding: 0;
 }
+.titles{
+  color: #F29422;
+}
+.logo {
+    background-color: #0D0D0D;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+}
 .topnav {
-  background-color: #333;
+  background-color: #0D0D0D;
   overflow: hidden;
 }
 
 
 .topnav a {
   float: left;
-  color: #f2f2f2;
+  color: #F29422;
   text-align: center;
   padding: 14px 16px;
   text-decoration: none;
-  font-size: 17px;
+  font-size: 25px;
 }
 
 
 .topnav a:hover {
-  background-color: #ddd;
+  background-color: #ffffff;
   color: black;
 }
 
@@ -38,4 +49,55 @@ html {
 .topnav a.active {
   background-color: var(--theme-color);
   color: rgb(0, 0, 0);
+}
+
+
+div.intro-text {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+  text-align: center; 
+}
+
+.footer {
+  background-color: #0D0D0D;
+  color: #F29422;
+  text-align: right;
+  bottom: 0;
+  width: 100%;
+}
+.aboutme-image {
+  width: 100%;
+  height: auto;
+  max-width: 300px;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+.aboutme {
+  display: flex;
+  flex-direction: row ;
+  justify-content: left;
+  font-size: 25px;
+  background-color: #0D0D0D;
+  color: #ffffff;
+  text-align: left;
+  padding: 20px;
+}
+
+.skills {
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  font-size: 25px;
+  background-color: #0D0D0D;
+  color: #ffffff;
+  text-align: left;
+  padding-left: 50px;
+}
+
+.tools {
+  padding-left: 50px;
 }
