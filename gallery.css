@@ -1,11 +1,13 @@
 div.gallery {
+    border: 5px solid #ffffff;
+
    transition: filter 0.5s, border 0.5s;
   -webkit-transition: -webkit-filter 0.5s, border 0.5s;
 }
 div.gallery:hover {
+  border: 0px solid #ffffff;
   -webkit-filter: grayscale(100%); 
   filter: grayscale(100%);
-  border: 5px solid #0D0D0D;
  
 }
 
@@ -30,9 +32,14 @@ div.desc {
   /*padding: 0 6px;
   float: left;
   width: 24.99999%;*/
+  flex-wrap: wrap;
   display: flex;
   flex-direction: row;
   justify-content: left;
+}
+
+.responsive {
+  max-width: 20%;
 }
 
 @media only screen and (max-width: 700px) {
@@ -53,3 +60,4 @@ div.desc {
   display: table;
   clear: both;
 }
+
