@@ -131,6 +131,28 @@ div.intro-text {
   padding-left: 50px;
 }
 
+.form-group label {
+  display: flex;
+  justify-content: left;
+  padding-top: 50px;
+}
+
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.button {
+  background-color: #F29422;
+  color: #ffffff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
 
 .social-media {
   color: #ffffff;
