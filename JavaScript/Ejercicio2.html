@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // Ejercicio 1
+      let play = Boolean(true);
+      while (play === true) {
+        let x = Math.floor(Math.random() * 100);
+        let y = Math.floor(Math.random() * 100);
+        let z = Number(prompt(`la suma de ${x} + ${y} es`));
+        while (isNaN(z) || z === "") {
+          z = Number(
+            prompt(
+              `Por favor, introduce un número válido para la suma de ${x} + ${y}`
+            )
+          );
+        }
+        if (z === x + y) {
+          alert("Correcto");
+        } else {
+          alert("Incorrecto");
+        }
+        play = prompt("¿Quieres jugar otra vez? (true/false)").trim().toLowerCase() === "true";
+        alert(play);
+      }
+    </script>
+  </body>
+</html>
