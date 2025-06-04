@@ -1,63 +1,101 @@
-const tareasPendientes = ["Limpiar ordenador","Explicar JS", "Resolver dudas"]
-const tareasCompletas = []
+// ESTRUCTURA DE TAREAS
+// {
+//  nombre, prioridad, estado
+// }
 
-function main() {
-    renderApp()
-}
-// Recargar interfaz
+
 function renderApp() {
-    const myApp = document.getElementById("app")    
+    const tablaTareas = document.getElementById("tablaTareas")
+    tablaTareas.innerHTML = ""
+    const prioridades = ["Normal", "Importante", "SuperUrgente"]
+    const estados = {
+        "pendiente": "Pendiente",
+        "progreso": "En progreso",
+        "completa": "Tarea completada"
+    }
 
-    myApp.innerHTML = `
-        <h2>Bienvenid@ a la App</h2>
-
-        <h3>Tareas pendientes</h3>
-        <ol>
-            ${formatearTareas(tareasPendientes, completo=false)}
-        </ol>
-
-        <h3>Tareas Completas</h3>
-        <ul>
-            ${formatearTareas(tareasCompletas, completo=true)}
-        </ul>
-    `
+    cargarTareas().forEach((tarea, index) => {
+        tablaTareas.innerHTML += `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${tarea.nombre}</td>
+                    <td>${prioridades[tarea.prioridad - 1]}</td>
+                    <td>${estados[tarea.estado]}</td>
+                    <td>
+                        <button class="btn-danger" onclick="eliminarTarea(${index})">Eliminar</button>
+                </tr>
+        `
+    })
 }
 
-// Crear tareas
+/**
+ * Hace una llamada a añadirTareas y resetea el valor del input
+ */
 function crearTarea() {
+    console.log("Añadiendo tarea...")
     const userInput = document.getElementById("nombreTarea")
-    tareasPendientes.push(userInput.value)
-    userInput.value = ""   
+    const prioridadInput = document.getElementById("prioridadtarea")
+    const estadoInput = document.getElementById("estadotarea")
+    añadirTarea(userInput.value, Number(prioridadInput.value), estadoInput.value)
+    userInput.value = ""
+
     renderApp()
 }
 
-// Muestra las tareas
-function formatearTareas(listaDeTareas, completo) {
+/**
+ * La función crea un objeto con las propiedades de tarea (nombre, prioridad, estado) y lo guarda en localStorage
+ * @param {string} nombre El nombre de la tarea
+ * @param {number} prioridad La prioridad de la tarea
+ * @param {string} estado El estado de la tarea
+ * @returns 
+ */
+function añadirTarea(nombre, prioridad, estado) {
+    if (nombre.length < 3 || nombre.length > 63) {
+        console.warn("El nombre de la tarea debe tener entre 3 y 63 caracteres")
+        return
+    }
+    console.log(prioridad)
+    console.log(![1, 2 ,3].includes(prioridad))
+    if (![1, 2 ,3].includes(prioridad)) {
+        console.warn("Prioridad no es válida")
+        return
+    }
+
+    if (!["pendiente", "progreso", "completa"].includes(estado)) {
+        console.warn("El estado debe ser 'pendiente', 'progreso' o 'completa'")
+        return
+    }
+
+    const tareas = cargarTareas()
+    tareas.push({nombre, prioridad, estado})
+
+    guardarTareas(tareas)
+}
+
+function formatearTareas(tareas) {
     const tareasFormateadas = []
 
-    listaDeTareas.forEach((tarea) => {
-        tareasFormateadas.push(`<li ${completo ? "class='tachado'": ""}>${tarea}</li>`)
+    tareas.forEach((tarea) => {
+        tareasFormateadas.push(`<li>${tarea.nombre}</li>`)
     })
 
     return tareasFormateadas.join("")
 }
 
-// Complete una tarea
 
-// Eliminar Tarea
-function eliminarTarea() {
-    const idTarea = document.getElementById("eliminarTarea")
+function eliminarTarea(index) {
+    const tareas = cargarTareas()
 
-    if (!tareasPendientes[Number(idTarea.value - 1)]) {
-        alert("Tarea no existe")
-    } else {
-        tareasCompletas.push(tareasPendientes.splice(Number(idTarea.value - 1), 1))
+    if (!tareas[index]) {
+        console.warn("Tarea no existe o el índice no es válido")
+        return
     }
+    
+    tareas.splice(index, 1)
 
-
-    idTarea.value = ""
+    guardarTareas(tareas)    
     renderApp()
 }
 
 
-main()
+renderApp()

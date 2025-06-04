@@ -9,24 +9,79 @@
     <link rel="shortcut icon" href="assets/icon_owl.png" type="image/x-icon">
 </head>
 <body>
-    <header>
+    <header class="header-main">
         <h1 id="tituloPrincipal">OwlTasks</h1>
     </header>
 
-    <section id="controles">
-        <input type="text" id="nombreTarea">
-        <button onclick="crearTarea()">Crear Tarea</button>
+    <!--
+        TODO: rehacer el módulo de creación de tareas de manera que al
+        hacer click en nueva tarea, me muestre los campos a rellenar.
+    -->
+    <!--
+        TODO: mejorar la muestra de tareas, añadiendo botones individuales
+        para editar y borrar tareas.
+    -->
+    <main>
+        <h2>Bienvenid@ a la app</h2>
 
-        <input type="text" id="eliminarTarea">
-        <button onclick="eliminarTarea()">Eliminar tarea</button>
-    </section>
+       <!-- <section id="controles">
+            <input type="text" id="nombreTarea">
+            <button onclick="crearTarea()">Crear Tarea</button>
 
-    <main id="app"></main>
+            <input type="text" id="eliminarTarea">
+            <button onclick="eliminarTarea()">Eliminar tarea</button>
+        </section>-->
 
-    <footer>
+        <form class="formtarea">
+            <label>
+                Nombre de la tarea
+                    <input type="text" range="nombre" id="nombreTarea">
+            <label>
+                Prioridad
+                    <select range="prioridad" id="prioridadtarea">
+                    <option selected value="1">normal</option>
+                    <option value="2">importante</option>    
+                    <option value="3">superurgente</option>
+                    </select>
+            </label>
+            <label>
+                Estado
+                    <select range="estado" id="estadotarea">
+                    <option selected value="pendiente">pendiente</option>
+                    <option value="progreso">en progreso</option>    
+                    <option value="completa">completada</option>
+                    </select>
+            </label>
+            <button onclick="crearTarea()">Crear Tarea</button>
+            
+
+        </form>
+
+        <table class="tablaTareas">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="tablaTareas">
+                <tr>
+                    <td>1</td>
+                    <td>Tarea de ejemplo</td>
+                    <td>Importante</td>
+                    <td>En progreso</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <footer class="footer-main">
         <p>2025 &copy; OwlTasks</p>
     </footer>
 
+    <script src="src/localdb.js"></script>
     <script src="src/app.js"></script>
 </body>
 </html>
