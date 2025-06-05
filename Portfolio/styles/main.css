@@ -2,15 +2,7 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #fecea8;
-}
-.me {
-  width: 40%;
-}
-.me img {
-  width: 100%;
-  height: auto;
-  border-radius: 50%;
+  background-color: #292929;
 }
 .sidenav {
   height: 100%; /* Full-height: remove this if you want "auto" height */
@@ -19,9 +11,16 @@ body {
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: #2a353b; /* Black */
+  background-color: #1a1b1c; /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 10px;
+}
+
+.indextest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
 }
 
 /* The navigation menu links */
@@ -45,10 +44,10 @@ body {
   color: #99B898;
 }
 
-.indextest {
+/*.indextest {
     display: flex;
     align-items: center;
-}
+}*/
 
 /* Style page content */
 .main {
