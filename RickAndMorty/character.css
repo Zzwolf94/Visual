@@ -1,0 +1,89 @@
+/* Puedes añadir esto a main.css o character.css */
+
+/* Centrar el contenido de la página */
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background: #f0f0f0;
+}
+
+/* Estilo para la tarjeta de detalle */
+.overlay-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+  padding: 32px 24px;
+  max-width: 400px;
+  width: 90vw;
+  text-align: center;
+  margin: 48px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.overlay-card img {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 16px;
+  border: 4px solid #e2e2e2;
+}
+
+.overlay-card h2 {
+  margin: 12px 0 8px 0;
+  color: #333;
+  font-size: 1.5em;
+}
+
+.overlay-card p {
+  margin: 4px 0;
+  color: #666;
+  font-size: 1em;
+}
+
+.overlay-card h3 {
+  margin-top: 18px;
+  margin-bottom: 8px;
+  color: #4caf50;
+  font-size: 1.1em;
+}
+
+.overlay-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px 0;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.overlay-card li {
+  padding: 4px 0;
+  border-bottom: 1px solid #eee;
+  font-size: 0.98em;
+}
+
+.overlay-card a {
+  background: #fff;
+  border: 2px solid #4caf50;
+  color: #4caf50;
+  border-radius: 8px;
+  padding: 10px 24px;
+  font-size: 1em;
+  margin-top: 18px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  display: inline-block;
+}
+
+.overlay-card a:hover {
+  background: #4caf50;
+  color: #fff;
+  transform: translateY(-2px) scale(1.05);
+}

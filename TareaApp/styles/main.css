@@ -70,6 +70,7 @@ main {
     }
 
     td {
+        text-align: center;
         white-space: nowrap;
         
     }
