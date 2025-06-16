@@ -1,13 +1,13 @@
 /* Puedes añadir esto a main.css o character.css */
 
 /* Centrar el contenido de la página */
-body {
+/* body {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   background: #f0f0f0;
-}
+} */
 
 /* Estilo para la tarjeta de detalle */
 .overlay-card {
