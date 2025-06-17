@@ -2,15 +2,18 @@ let urlpersonajes = "https://rickandmortyapi.com/api/character";
 let prevurl = "";
 let nexturl = "";
 
-function ampliar(id) {
+function ampliarcharacter(id) {
   fetch(`https://rickandmortyapi.com/api/character/${id}`)
-    .then((res) => res.json())
+    .then(async (res) => await res.json())
     .then(async (character) => {
-      const detail = document.getElementById("character-detail");
-      detail.innerHTML = "";
+      const detail = document.getElementById("detail");
+
+      // Limpiar el contenido previo
+      detail.replaceChildren("");
 
       const overlayCard = document.createElement("div");
       overlayCard.className = "overlay-card";
+      overlayCard.id = "overlay-card";
 
       const img = document.createElement("img");
       img.src = character.image;
@@ -36,7 +39,7 @@ function ampliar(id) {
 
       // Episodios
       const episodesTitle = document.createElement("h3");
-      episodesTitle.textContent = "Episodios donde aparece:";
+      episodesTitle.textContent = "Episodes where it appears:";
 
       const episodesList = document.createElement("ul");
       // Obtener los IDs de los episodios
@@ -61,7 +64,7 @@ function ampliar(id) {
 
       const volver = document.createElement("a");
       volver.href = "index.html";
-      volver.textContent = "Volver";
+      volver.textContent = "Return";
 
       overlayCard.append(
         img,
@@ -76,6 +79,156 @@ function ampliar(id) {
         volver
       );
       detail.appendChild(overlayCard);
+      document.getElementById("overlay-card").scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    });
+}
+
+function ampliarlocation(id) {
+  fetch(`https://rickandmortyapi.com/api/location/${id}`)
+    .then(async (res) => await res.json())
+    .then(async (location) => {
+      const detail = document.getElementById("detail");
+      // Limpiar el contenido previo
+      detail.replaceChildren("");
+
+      const overlayCard = document.createElement("div");
+      overlayCard.className = "overlay-card";
+      overlayCard.id = "overlay-card";
+
+      const img = document.createElement("img");
+      img.src = "assets/planets/planet.jpg"; // Placeholder image for locations
+      img.alt = location.name;
+
+      const h2 = document.createElement("h2");
+      h2.textContent = location.name;
+
+      const type = document.createElement("p");
+      type.innerHTML = `<strong>Type:</strong> ${location.type}`;
+
+      const dimension = document.createElement("p");
+      dimension.innerHTML = `<strong>Dimension:</strong> ${location.dimension}`;
+
+      // Episodios
+      const residentsTitle = document.createElement("h3");
+      residentsTitle.textContent = "Location residents:";
+
+      const residentsList = document.createElement("ul");
+      // Obtener los IDs de los episodios
+      const residentsUrls = location.residents;
+      // Obtener los datos de los episodios (máximo 20 por petición)
+      const residentsIds = residentsUrls.map((url) => url.split("/").pop());
+      // Agrupar en bloques de 20 (límite de la API)
+      for (let i = 0; i < residentsIds.length; i += 20) {
+        const idsChunk = residentsIds.slice(i, i + 20);
+        const residentsData = await fetch(
+          `https://rickandmortyapi.com/api/character/${idsChunk.join(",")}`
+        ).then((res) => res.json());
+        const residentsArray = Array.isArray(residentsData)
+          ? residentsData
+          : [residentsData];
+        residentsArray.forEach((res) => {
+          const li = document.createElement("li");
+          li.textContent = `${res.name} - ${res.species}`;
+          residentsList.appendChild(li);
+        });
+      }
+
+      const volver = document.createElement("a");
+      volver.href = "index.html";
+      volver.textContent = "Return";
+
+      overlayCard.append(
+        img,
+        h2,
+        type,
+        dimension,
+        residentsTitle,
+        residentsList,
+        volver
+      );
+      detail.appendChild(overlayCard);
+      document.getElementById("overlay-card").scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
+    });
+}
+
+function ampliarepisodes(id) {
+  fetch(`https://rickandmortyapi.com/api/episode/${id}`)
+    .then(async (res) => await res.json())
+    .then(async (episode) => {
+      const detail = document.getElementById("detail");
+      // Limpiar el contenido previo
+      detail.replaceChildren("");
+
+      const overlayCard = document.createElement("div");
+      overlayCard.className = "overlay-card";
+      overlayCard.id = "overlay-card";
+
+      const img = document.createElement("img");
+      img.src = "assets/episode.jpg"; // Placeholder image for locations
+      img.alt = episode.name;
+
+      const h2 = document.createElement("h2");
+      h2.textContent = episode.name;
+
+      const air_date = document.createElement("p");
+      air_date.innerHTML = `<strong>Date:</strong> ${episode.air_date}`;
+
+      const ep = document.createElement("p");
+      ep.innerHTML = `<strong>Episode:</strong> ${episode.episode}`;
+
+      // Characters
+      const charactersTitle = document.createElement("h3");
+      charactersTitle.textContent = "Characters who appears:";
+
+      const charactersList = document.createElement("ul");
+      // Obtener los IDs de los episodios
+      const charactersUrls = episode.characters;
+      // Obtener los datos de los episodios (máximo 20 por petición)
+      const charactersIds = charactersUrls.map((url) => url.split("/").pop());
+      // Agrupar en bloques de 20 (límite de la API)
+      for (let i = 0; i < charactersIds.length; i += 20) {
+        const idsChunk = charactersIds.slice(i, i + 20);
+        const charactersData = await fetch(
+          `https://rickandmortyapi.com/api/character/${idsChunk.join(",")}`
+        ).then((res) => res.json());
+        const charactersArray = Array.isArray(charactersData)
+          ? charactersData
+          : [charactersData];
+        charactersArray.forEach((res) => {
+          const li = document.createElement("li");
+          li.textContent = `${res.name} - ${res.species}`;
+          charactersList.appendChild(li);
+        });
+      }
+
+      const volver = document.createElement("a");
+      volver.href = "index.html";
+      volver.textContent = "Return";
+
+      overlayCard.append(
+        img,
+        h2,
+        air_date,
+        ep,
+        charactersTitle,
+        charactersList,
+        volver
+      );
+      detail.appendChild(overlayCard);
+      // Scroll into view after the overlay card is added
+      document.getElementById("overlay-card").scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+        inline: "nearest",
+      });
     });
 }
 
@@ -104,12 +257,13 @@ function cargarpersonajes(paginaurl) {
           gallery.style.opacity = "0";
           next.style.opacity = "0";
           setTimeout(() => {
+            ampliarcharacter(character.id);
+          }, (timeout = 200));
+          setTimeout(() => {
             gallery.replaceChildren("");
             next.replaceChildren("");
-            ampliar(character.id);
             console.log(character);
           }, (timeout = 400));
-          // window.open(`character.html?id=${character.id}`, "_blank");
         });
         gallery.appendChild(card);
       });
@@ -164,9 +318,18 @@ function cargarplanetas(paginaurl) {
         const dimension = document.createElement("p");
         dimension.textContent = `Dimension: ${planet.dimension}`;
         card.append(img, name, type, dimension);
-        // card.addEventListener('click', () => {
-        //   window.open(`character.html?id=${character.id}`, '_blank');
-        // });
+        card.addEventListener("click", () => {
+          gallery.style.opacity = "0";
+          next.style.opacity = "0";
+          setTimeout(() => {
+            ampliarlocation(planet.id);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            next.replaceChildren("");
+            console.log(planet);
+          }, (timeout = 400));
+        });
         gallery.appendChild(card);
       });
 
@@ -220,10 +383,19 @@ function cargarepisodios(paginaurl) {
         const episodenum = document.createElement("p");
         episodenum.textContent = `Episode: ${episode.episode}`;
         card.append(img, name, date, episodenum);
-        // card.addEventListener('click', () => {
-        //   window.open(`character.html?id=${character.id}`, '_blank');
-        // });
         gallery.appendChild(card);
+        card.addEventListener("click", () => {
+          gallery.style.opacity = "0";
+          next.style.opacity = "0";
+          setTimeout(() => {
+            ampliarepisodes(episode.id);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            next.replaceChildren("");
+            console.log(episode);
+          }, (timeout = 400));
+        });
       });
 
       nexturl = data.info.next;
@@ -370,25 +542,38 @@ function search() {
   }
 }
 const next = document.getElementById("next");
+const gallery = document.getElementById("gallery");
 const searchButton = document.getElementById("search-button");
 searchButton.addEventListener("click", () => {
+  detail.replaceChildren("");
   next.replaceChildren("");
   gallery.replaceChildren("");
+  gallery.style.opacity = "1";
+  next.style.opacity = "1";
   search();
 });
-
+const detail = document.getElementById("detail");
 const personajesButton = document.getElementById("personajes");
 personajesButton.addEventListener("click", () => {
+  detail.replaceChildren("");
   gallery.replaceChildren("");
+  gallery.style.opacity = "1";
+  next.style.opacity = "1";
   cargarpersonajes("https://rickandmortyapi.com/api/character");
 });
 const planetsButton = document.getElementById("planetas");
 planetsButton.addEventListener("click", () => {
+  detail.replaceChildren("");
   gallery.replaceChildren("");
+  gallery.style.opacity = "1";
+  next.style.opacity = "1";
   cargarplanetas("https://rickandmortyapi.com/api/location");
 });
 const episodesButton = document.getElementById("episodios");
 episodesButton.addEventListener("click", () => {
+  detail.replaceChildren("");
   gallery.replaceChildren("");
+  gallery.style.opacity = "1";
+  next.style.opacity = "1";
   cargarepisodios("https://rickandmortyapi.com/api/episode");
 });
