@@ -79,6 +79,8 @@ function ampliarcharacter(id) {
         volver
       );
       detail.appendChild(overlayCard);
+      const gallery = document.getElementById("gallery");
+      gallery.style.minHeight = "0";
       document.getElementById("overlay-card").scrollIntoView({
         behavior: "smooth",
         block: "center",
@@ -151,6 +153,8 @@ function ampliarlocation(id) {
         volver
       );
       detail.appendChild(overlayCard);
+      const gallery = document.getElementById("gallery");
+      gallery.style.minHeight = "0";
       document.getElementById("overlay-card").scrollIntoView({
         behavior: "smooth",
         block: "center",
@@ -223,6 +227,8 @@ function ampliarepisodes(id) {
         volver
       );
       detail.appendChild(overlayCard);
+      const gallery = document.getElementById("gallery");
+      gallery.style.minHeight = "0";
       // Scroll into view after the overlay card is added
       document.getElementById("overlay-card").scrollIntoView({
         behavior: "smooth",
@@ -241,6 +247,7 @@ function cargarpersonajes(paginaurl) {
           `Name: ${character.name}, Status: ${character.status}, Species: ${character.species}`
         );
         const gallery = document.getElementById("gallery");
+        gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
         const card = document.createElement("div");
         card.className = "card";
         const img = document.createElement("img");
@@ -278,15 +285,32 @@ function cargarpersonajes(paginaurl) {
       prevbutton.textContent = "prev";
       nextbutton.textContent = "next";
       nextbutton.addEventListener("click", () => {
-        gallery.replaceChildren("");
-        cargarpersonajes(nexturl);
+        if (nexturl === null) {
+          console.log("ya estas en la ultima pagina");
+        } else {
+          console.log("cargando siguiente pagina");
+          gallery.style.opacity = "0";
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            cargarpersonajes(nexturl);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.style.opacity = "1";
+          }, (timeout = 400));
+        }
       });
       prevbutton.addEventListener("click", () => {
         if (prevurl === null) {
           console.log("ya estas en la primera pagina");
         } else {
-          gallery.replaceChildren("");
-          cargarpersonajes(prevurl);
+          gallery.style.opacity = "0";
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            cargarpersonajes(prevurl);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.style.opacity = "1";
+          }, (timeout = 400));
         }
       });
       next.replaceChildren("");
@@ -306,6 +330,7 @@ function cargarplanetas(paginaurl) {
           `Name: ${planet.name}, Type: ${planet.type}, Dimension: ${planet.dimension}`
         );
         const gallery = document.getElementById("gallery");
+        gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
         const card = document.createElement("div");
         card.className = "card";
         const img = document.createElement("img");
@@ -343,15 +368,31 @@ function cargarplanetas(paginaurl) {
       prevbutton.textContent = "prev";
       nextbutton.textContent = "next";
       nextbutton.addEventListener("click", () => {
-        gallery.replaceChildren("");
-        cargarplanetas(nexturl);
+        if (nexturl === null) {
+          console.log("ya estas en la ultima pagina");
+        } else {
+          gallery.style.opacity = "0";
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            cargarplanetas(nexturl);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.style.opacity = "1";
+          }, (timeout = 400));
+        }
       });
       prevbutton.addEventListener("click", () => {
         if (prevurl === null) {
           console.log("ya estas en la primera pagina");
         } else {
-          gallery.replaceChildren("");
-          cargarplanetas(prevurl);
+          gallery.style.opacity = "0";
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            cargarplanetas(prevurl);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.style.opacity = "1";
+          }, (timeout = 400));
         }
       });
       next.replaceChildren("");
@@ -371,6 +412,7 @@ function cargarepisodios(paginaurl) {
           `Name: ${episode.name}, Status: ${episode.air_date}, Species: ${episode.episode}`
         );
         const gallery = document.getElementById("gallery");
+        gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
         const card = document.createElement("div");
         card.className = "card";
         const img = document.createElement("img");
@@ -408,15 +450,31 @@ function cargarepisodios(paginaurl) {
       prevbutton.textContent = "prev";
       nextbutton.textContent = "next";
       nextbutton.addEventListener("click", () => {
-        gallery.replaceChildren("");
-        cargarepisodios(nexturl);
+        if (nexturl === null) {
+          console.log("ya estas en la ultima pagina");
+        } else {
+          gallery.style.opacity = "0";
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            cargarepisodios(nexturl);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.style.opacity = "1";
+          }, (timeout = 400));
+        }
       });
       prevbutton.addEventListener("click", () => {
         if (prevurl === null) {
           console.log("ya estas en la primera pagina");
         } else {
-          gallery.replaceChildren("");
-          cargarepisodios(prevurl);
+          gallery.style.opacity = "0";
+          setTimeout(() => {
+            gallery.replaceChildren("");
+            cargarepisodios(prevurl);
+          }, (timeout = 200));
+          setTimeout(() => {
+            gallery.style.opacity = "1";
+          }, (timeout = 400));
         }
       });
       next.replaceChildren("");
@@ -449,6 +507,7 @@ function search() {
           data.results.forEach((character) => {
             console.log(character.name);
             const gallery = document.getElementById("gallery");
+            gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
             const card = document.createElement("div");
             card.className = "card";
             const img = document.createElement("img");
@@ -465,9 +524,11 @@ function search() {
               gallery.style.opacity = "0";
               next.style.opacity = "0";
               setTimeout(() => {
+                ampliarcharacter(character.id);
+              }, (timeout = 200));
+              setTimeout(() => {
                 gallery.replaceChildren("");
                 next.replaceChildren("");
-                ampliar(character.id);
                 console.log(character);
               }, (timeout = 400));
             });
@@ -490,6 +551,7 @@ function search() {
           data.results.forEach((planet) => {
             console.log(planet.name);
             const gallery = document.getElementById("gallery");
+            gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
             const card = document.createElement("div");
             card.className = "card";
             const img = document.createElement("img");
@@ -502,6 +564,18 @@ function search() {
             const dimension = document.createElement("p");
             dimension.textContent = `Dimension: ${planet.dimension}`;
             card.append(img, name, type, dimension);
+            card.addEventListener("click", () => {
+              gallery.style.opacity = "0";
+              next.style.opacity = "0";
+              setTimeout(() => {
+                ampliarlocation(planet.id);
+              }, (timeout = 200));
+              setTimeout(() => {
+                gallery.replaceChildren("");
+                next.replaceChildren("");
+                console.log(planet);
+              }, (timeout = 400));
+            });
             gallery.appendChild(card);
           });
         } else {
@@ -521,6 +595,7 @@ function search() {
           data.results.forEach((episode) => {
             console.log(episode.name);
             const gallery = document.getElementById("gallery");
+            gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
             const card = document.createElement("div");
             card.className = "card";
             const img = document.createElement("img");
@@ -533,6 +608,18 @@ function search() {
             const episodenum = document.createElement("p");
             episodenum.textContent = `Episode: ${episode.episode}`;
             card.append(img, name, date, episodenum);
+            card.addEventListener("click", () => {
+              gallery.style.opacity = "0";
+              next.style.opacity = "0";
+              setTimeout(() => {
+                ampliarepisodes(episode.id);
+              }, (timeout = 200));
+              setTimeout(() => {
+                gallery.replaceChildren("");
+                next.replaceChildren("");
+                console.log(episode);
+              }, (timeout = 400));
+            });
             gallery.appendChild(card);
           });
         } else {
@@ -565,9 +652,7 @@ personajesButton.addEventListener("click", () => {
   setTimeout(() => {
     gallery.style.opacity = "1";
     next.style.opacity = "1";
-    console.log(character);
   }, (timeout = 400));
-
 
   // detail.replaceChildren("");
   // gallery.replaceChildren("");
@@ -577,7 +662,6 @@ personajesButton.addEventListener("click", () => {
 });
 const planetsButton = document.getElementById("planetas");
 planetsButton.addEventListener("click", () => {
-
   gallery.style.opacity = "0";
   next.style.opacity = "0";
   setTimeout(() => {
@@ -588,9 +672,7 @@ planetsButton.addEventListener("click", () => {
   setTimeout(() => {
     gallery.style.opacity = "1";
     next.style.opacity = "1";
-    console.log(character);
   }, (timeout = 400));
-
 
   // detail.replaceChildren("");
   // gallery.replaceChildren("");
@@ -598,10 +680,10 @@ planetsButton.addEventListener("click", () => {
   // next.style.opacity = "1";
   // cargarplanetas("https://rickandmortyapi.com/api/location");
 });
+
+
 const episodesButton = document.getElementById("episodios");
 episodesButton.addEventListener("click", () => {
-
-
   gallery.style.opacity = "0";
   next.style.opacity = "0";
   setTimeout(() => {
@@ -612,9 +694,7 @@ episodesButton.addEventListener("click", () => {
   setTimeout(() => {
     gallery.style.opacity = "1";
     next.style.opacity = "1";
-    console.log(character);
   }, (timeout = 400));
-
 
   // detail.replaceChildren("");
   // gallery.replaceChildren("");

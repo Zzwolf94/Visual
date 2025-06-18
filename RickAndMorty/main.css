@@ -27,6 +27,11 @@ html, body {
   justify-content: center;
   padding: 24px;
   background: #f0f0f0;
+  background-image: url('assets/portal.png');
+  background-size: 50%;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 150vh;
 }
 
 .gallery {
