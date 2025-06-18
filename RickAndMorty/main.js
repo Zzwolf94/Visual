@@ -555,25 +555,70 @@ searchButton.addEventListener("click", () => {
 const detail = document.getElementById("detail");
 const personajesButton = document.getElementById("personajes");
 personajesButton.addEventListener("click", () => {
-  detail.replaceChildren("");
-  gallery.replaceChildren("");
-  gallery.style.opacity = "1";
-  next.style.opacity = "1";
-  cargarpersonajes("https://rickandmortyapi.com/api/character");
+  gallery.style.opacity = "0";
+  next.style.opacity = "0";
+  setTimeout(() => {
+    gallery.replaceChildren("");
+    detail.replaceChildren("");
+    cargarpersonajes("https://rickandmortyapi.com/api/character");
+  }, (timeout = 200));
+  setTimeout(() => {
+    gallery.style.opacity = "1";
+    next.style.opacity = "1";
+    console.log(character);
+  }, (timeout = 400));
+
+
+  // detail.replaceChildren("");
+  // gallery.replaceChildren("");
+  // gallery.style.opacity = "1";
+  // next.style.opacity = "1";
+  // cargarpersonajes("https://rickandmortyapi.com/api/character");
 });
 const planetsButton = document.getElementById("planetas");
 planetsButton.addEventListener("click", () => {
-  detail.replaceChildren("");
-  gallery.replaceChildren("");
-  gallery.style.opacity = "1";
-  next.style.opacity = "1";
-  cargarplanetas("https://rickandmortyapi.com/api/location");
+
+  gallery.style.opacity = "0";
+  next.style.opacity = "0";
+  setTimeout(() => {
+    gallery.replaceChildren("");
+    detail.replaceChildren("");
+    cargarplanetas("https://rickandmortyapi.com/api/location");
+  }, (timeout = 200));
+  setTimeout(() => {
+    gallery.style.opacity = "1";
+    next.style.opacity = "1";
+    console.log(character);
+  }, (timeout = 400));
+
+
+  // detail.replaceChildren("");
+  // gallery.replaceChildren("");
+  // gallery.style.opacity = "1";
+  // next.style.opacity = "1";
+  // cargarplanetas("https://rickandmortyapi.com/api/location");
 });
 const episodesButton = document.getElementById("episodios");
 episodesButton.addEventListener("click", () => {
-  detail.replaceChildren("");
-  gallery.replaceChildren("");
-  gallery.style.opacity = "1";
-  next.style.opacity = "1";
-  cargarepisodios("https://rickandmortyapi.com/api/episode");
+
+
+  gallery.style.opacity = "0";
+  next.style.opacity = "0";
+  setTimeout(() => {
+    gallery.replaceChildren("");
+    detail.replaceChildren("");
+    cargarepisodios("https://rickandmortyapi.com/api/episode");
+  }, (timeout = 200));
+  setTimeout(() => {
+    gallery.style.opacity = "1";
+    next.style.opacity = "1";
+    console.log(character);
+  }, (timeout = 400));
+
+
+  // detail.replaceChildren("");
+  // gallery.replaceChildren("");
+  // gallery.style.opacity = "1";
+  // next.style.opacity = "1";
+  // cargarepisodios("https://rickandmortyapi.com/api/episode");
 });
