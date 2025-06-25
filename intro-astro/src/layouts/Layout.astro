@@ -1,13 +1,33 @@
+---
+import NavBar from "../components/Navbar.astro";
+
+export interface Props {
+	titulo: string;
+}
+
+// const titulo = Astro.props.titulo;
+const { titulo } = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" type="image/svg+xml" href="../../public/icon_owl.png" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{titulo}</title>
 	</head>
 	<body>
+		<NavBar 
+			logo="icon_owl.png", 
+			brand="OMDavid", 
+			links={[
+				{ text: "Home2", href: "/" },
+				{ text: "Contacto2", href: "/contacto" },
+				{ text: "Nosotros2", href: "/nosotros" }
+			]}
+		/>
 		<slot />
 	</body>
 </html>

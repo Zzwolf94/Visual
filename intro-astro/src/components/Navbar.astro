@@ -1,0 +1,173 @@
+---
+// Esto es una interfaz de TypeScript donde estamos definiendo qué debe contener el objeto por defecto
+// Props, así como el tipo de datos que tiene que ser cada cosa.
+export interface Props {
+	logo?: string;
+	brand: string;
+	links: Array<{ text: string; href: string }>; 	// Aquí estamos diciendo que queremos un Array
+												  	// de objetos, cada objeto con 2 propiedades (text y href)
+}
+
+// Destructurar el objeto Props que nos pasa Astro por defecto a este componente y 
+// sacar las propiedades logo, bran y links si existen.
+const { logo, brand, links } = Astro.props;
+
+// Astro sabe en todo momento cual es la url, con pathname le pedimos que nos de el path
+// de la url, ignorando el servidor, dominio y puerto, así podemos compararlo con los enlaces.
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="navbar">
+	<div class="navbar-container">
+		<!-- Imagen de marca, logo y brand -->
+		<div class="navbar-brand">
+			<!-- Si nos han pasado un logo, esta expresión será cierta
+			 	y la imagen se insertará en la barra de navegación, si no, pues no.
+			 -->
+			{logo && <img src={logo} alt="" class="navbar-logo" />}
+			<a href="/" class="brand-text">{brand.toLocaleUpperCase()}</a>
+		</div>
+
+		<!-- Cosas para el movil -->
+
+		<!-- Enlaces del menú de navegación -->
+		<div class="navbar-menu">
+			<ul class="navbar-nav">
+				<!--
+					Utilizamos el Array de links para crear un nuevo Array con map, generando un li
+					con un a por cada objeto de la lista, con su texto y href. Comparamos href con el
+					path actual para determinar si añadir la clase 'active' o no a la lista de clases
+					del enlace y, de esa manera, poder resaltar la página actual en el menú de navegación.
+				 -->
+				{
+					links.map((link) => {
+						return (
+							<li class="navbar-item">
+								<a
+									href={link.href}
+									class={`nav-link ${link.href === currentPath ? "active" : ""}`}
+								>
+									{link.text}
+								</a>
+							</li>
+						);
+					})
+				}
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<style>
+	.navbar {
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+		position: sticky;
+		top: 0;
+		z-index: 1000;
+		backdrop-filter: blur(10px);
+	}
+
+	.navbar-container {
+		width: 100%;
+		margin: 0 auto;
+		padding: 0 1rem;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 4rem;
+	}
+
+	.navbar-brand {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+	}
+
+	.navbar-logo {
+		height: 2rem;
+		width: auto;
+		border-radius: 4px;
+	}
+
+	.brand-text {
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: white;
+		text-decoration: none;
+		letter-spacing: -0.025rem;
+		transition: opacity 0.2s ease;
+	}
+
+	.brand-text:hover {
+		opacity: 0.5;
+	}
+
+	.navbar-menu {
+		display: flex;
+        padding-right: 1.5rem;
+	}
+
+	.navbar-nav {
+		display: flex;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		gap: 2rem;
+	}
+
+	.nav-item {
+		position: relative;
+	}
+
+	.nav-link {
+		color: rgba(255, 255, 255, 0.7);
+		text-decoration: none;
+		padding: 0.5rem 1rem;
+		border-radius: 6px;
+		font-weight: 500;
+		transition: all 0.2 ease;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.nav-link:hover {
+		color: white;
+		background: rgba(255, 255, 255, 0.1);
+		transform: translateY(-1px);
+	}
+
+	.nav-link.active {
+        color: white;
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	}
+
+	.nav-link.active::before {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 70%;
+        transform: translateX(-50%);
+        height: 2px;
+        background: white;
+        border: 1px;
+	}
+
+	/* La animación guay */
+    .navbar {
+        animation: slideDown 0.5s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+</style>
