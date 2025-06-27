@@ -1,0 +1,8 @@
+.lista-container {
+  display: flex;
+  gap: 32px;         
+  align-items: flex-start;  
+    justify-content: center;
+  margin-top: 32px;
+  width: 100%   ;
+}
