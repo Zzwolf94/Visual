@@ -30,12 +30,11 @@ async function fetchData() {
         console.log("Episodes API Info:", data);
         maxepisodes = data.info.pages;
       });
-
+// Wait for all promises to resolve
     for (let i = 1; i < maxcharacters; i += 1) {
       await fetch(`https://rickandmortyapi.com/api/character?page=${i}`)
         .then((res) => res.json())
         .then((character) => {
-          // console.log(character.results[0].name);
           character.results.forEach((char) => {
             const characterData = {
               id: char.id,
@@ -50,7 +49,6 @@ async function fetchData() {
       await fetch(`https://rickandmortyapi.com/api/location?page=${i}`)
         .then((res) => res.json())
         .then((planets) => {
-          // console.log(character.results[0].name);
           planets.results.forEach((pla) => {
             const plaData = {
               id: pla.id,
@@ -64,7 +62,6 @@ async function fetchData() {
       await fetch(`https://rickandmortyapi.com/api/location?page=${i}`)
         .then((res) => res.json())
         .then((episodes) => {
-          // console.log(character.results[0].name);
           episodes.results.forEach((epi) => {
             const epiData = {
               id: epi.id,
@@ -81,14 +78,14 @@ async function fetchData() {
     console.error("Error fetching data:", error);
   }
 }
-
+// Function to expand character details
+// This function fetches character details from the API and displays them in an overlay card
 function ampliarcharacter(id) {
   fetch(`https://rickandmortyapi.com/api/character/${id}`)
     .then(async (res) => await res.json())
     .then(async (character) => {
       const detail = document.getElementById("detail");
 
-      // Limpiar el contenido previo
       detail.replaceChildren("");
       detail.style.opacity = "1";
 
@@ -118,16 +115,14 @@ function ampliarcharacter(id) {
       const location = document.createElement("p");
       location.innerHTML = `<strong>Location:</strong> ${character.location.name}`;
 
-      // Episodios
       const episodesTitle = document.createElement("h3");
       episodesTitle.textContent = "Episodes where it appears:";
 
       const episodesList = document.createElement("ul");
-      // Obtener los IDs de los episodios
       const episodeUrls = character.episode;
-      // Obtener los datos de los episodios (máximo 20 por petición)
       const episodeIds = episodeUrls.map((url) => url.split("/").pop());
-      // Agrupar en bloques de 20 (límite de la API)
+      // group in chunks of 20 (API limit)
+      // This is to avoid hitting the API limit of 20 characters per request
       for (let i = 0; i < episodeIds.length; i += 20) {
         const idsChunk = episodeIds.slice(i, i + 20);
         const episodesData = await fetch(
@@ -169,13 +164,13 @@ function ampliarcharacter(id) {
       });
     });
 }
-
+// Function to expand location details
+// This function fetches location details from the API and displays them in an overlay card
 function ampliarlocation(id) {
   fetch(`https://rickandmortyapi.com/api/location/${id}`)
     .then(async (res) => await res.json())
     .then(async (location) => {
       const detail = document.getElementById("detail");
-      // Limpiar el contenido previo
       detail.replaceChildren("");
       detail.style.opacity = "1";
 
@@ -184,7 +179,7 @@ function ampliarlocation(id) {
       overlayCard.id = "overlay-card";
 
       const img = document.createElement("img");
-      img.src = "assets/planets/planet.jpg"; // Placeholder image for locations
+      img.src = "assets/planet.jpg"; // Placeholder image for locations
       img.alt = location.name;
 
       const h2 = document.createElement("h2");
@@ -196,16 +191,15 @@ function ampliarlocation(id) {
       const dimension = document.createElement("p");
       dimension.innerHTML = `<strong>Dimension:</strong> ${location.dimension}`;
 
-      // Episodios
+      // Episodes
       const residentsTitle = document.createElement("h3");
       residentsTitle.textContent = "Location residents:";
 
       const residentsList = document.createElement("ul");
-      // Obtener los IDs de los episodios
       const residentsUrls = location.residents;
-      // Obtener los datos de los episodios (máximo 20 por petición)
       const residentsIds = residentsUrls.map((url) => url.split("/").pop());
-      // Agrupar en bloques de 20 (límite de la API)
+      // group in chunks of 20 (API limit)
+      // This is to avoid hitting the API limit of 20 characters per request
       for (let i = 0; i < residentsIds.length; i += 20) {
         const idsChunk = residentsIds.slice(i, i + 20);
         const residentsData = await fetch(
@@ -244,13 +238,15 @@ function ampliarlocation(id) {
       });
     });
 }
-
+// Function to expand episode details
+// This function fetches episode details from the API and displays them in an overlay card
 function ampliarepisodes(id) {
   fetch(`https://rickandmortyapi.com/api/episode/${id}`)
     .then(async (res) => await res.json())
     .then(async (episode) => {
       const detail = document.getElementById("detail");
-      // Limpiar el contenido previo
+      // clear previous content
+      // This is to avoid the overlay card being added multiple times
       detail.replaceChildren("");
       detail.style.opacity = "1";
 
@@ -276,11 +272,9 @@ function ampliarepisodes(id) {
       charactersTitle.textContent = "Characters who appears:";
 
       const charactersList = document.createElement("ul");
-      // Obtener los IDs de los episodios
       const charactersUrls = episode.characters;
-      // Obtener los datos de los episodios (máximo 20 por petición)
       const charactersIds = charactersUrls.map((url) => url.split("/").pop());
-      // Agrupar en bloques de 20 (límite de la API)
+      // This is to avoid hitting the API limit of 20 characters per request
       for (let i = 0; i < charactersIds.length; i += 20) {
         const idsChunk = charactersIds.slice(i, i + 20);
         const charactersData = await fetch(
@@ -320,7 +314,8 @@ function ampliarepisodes(id) {
       });
     });
 }
-
+// Function to load characters from the API
+// This function fetches characters from the API and displays them in the gallery
 function cargarpersonajes(paginaurl) {
   fetch(paginaurl)
     .then((response) => response.json())
@@ -330,7 +325,7 @@ function cargarpersonajes(paginaurl) {
           `Name: ${character.name}, Status: ${character.status}, Species: ${character.species}`
         );
         const gallery = document.getElementById("gallery");
-        gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
+        gallery.style.minHeight = "110vh"; // Ensure the gallery has a minimum height for better layout
         const card = document.createElement("div");
         card.className = "card";
         const img = document.createElement("img");
@@ -403,7 +398,8 @@ function cargarpersonajes(paginaurl) {
       console.error("Error fetching characters:", error);
     });
 }
-
+// Function to load planets from the API
+// This function fetches planets from the API and displays them in the gallery
 function cargarplanetas(paginaurl) {
   fetch(paginaurl)
     .then((response) => response.json())
@@ -413,11 +409,11 @@ function cargarplanetas(paginaurl) {
           `Name: ${planet.name}, Type: ${planet.type}, Dimension: ${planet.dimension}`
         );
         const gallery = document.getElementById("gallery");
-        gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
+        gallery.style.minHeight = "110vh"; // Ensure the gallery has a minimum height for better layout
         const card = document.createElement("div");
         card.className = "card";
         const img = document.createElement("img");
-        img.src = "assets/planets/planet.jpg";
+        img.src = "assets/planet.jpg";
         img.alt = planet.name;
         const name = document.createElement("h2");
         name.textContent = planet.name;
@@ -485,7 +481,8 @@ function cargarplanetas(paginaurl) {
       console.error("Error fetching characters:", error);
     });
 }
-
+// Function to load episodes from the API
+// This function fetches episodes from the API and displays them in the gallery
 function cargarepisodios(paginaurl) {
   fetch(paginaurl)
     .then((response) => response.json())
@@ -495,7 +492,7 @@ function cargarepisodios(paginaurl) {
           `Name: ${episode.name}, Status: ${episode.air_date}, Species: ${episode.episode}`
         );
         const gallery = document.getElementById("gallery");
-        gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
+        gallery.style.minHeight = "110vh"; // Ensure the gallery has a minimum height for better layout
         const card = document.createElement("div");
         card.className = "card";
         const img = document.createElement("img");
@@ -567,7 +564,8 @@ function cargarepisodios(paginaurl) {
       console.error("Error fetching characters:", error);
     });
 }
-
+// Function to handle search functionality
+// This function checks which checkbox is selected and filters the respective list based on the search input
 function search() {
   const charcheckbox = document.getElementById("personajes-checkbox");
   console.log(charcheckbox);
@@ -589,7 +587,7 @@ function search() {
         .then((res) => res.json())
         .then((character) => {
           const gallery = document.getElementById("gallery");
-          gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
+          gallery.style.minHeight = "110vh"; // Ensure the gallery has a minimum height for better layout
           const card = document.createElement("div");
           card.className = "card";
           const img = document.createElement("img");
@@ -629,11 +627,11 @@ function search() {
         .then((res) => res.json())
         .then((planet) => {
           const gallery = document.getElementById("gallery");
-          gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
+          gallery.style.minHeight = "110vh"; // Ensure the gallery has a minimum height for better layout
           const card = document.createElement("div");
           card.className = "card";
           const img = document.createElement("img");
-          img.src = "assets/planets/planet.jpg"; // Placeholder image for locations
+          img.src = "assets/planet.jpg"; // Placeholder image for locations
           img.alt = planet.name;
           const name = document.createElement("h2");
           name.textContent = planet.name;
@@ -669,7 +667,7 @@ function search() {
         .then((res) => res.json())
         .then((episode) => {
           const gallery = document.getElementById("gallery");
-          gallery.style.minHeight = "150vh"; // Ensure the gallery has a minimum height for better layout
+          gallery.style.minHeight = "110vh"; // Ensure the gallery has a minimum height for better layout
           const card = document.createElement("div");
           card.className = "card";
           const img = document.createElement("img");
@@ -700,7 +698,7 @@ function search() {
   }
 }
 
-
+// Search button event listener
 const next = document.getElementById("next");
 const gallery = document.getElementById("gallery");
 const searchButton = document.getElementById("search-button");
@@ -719,8 +717,8 @@ searchButton.addEventListener("click", () => {
   next.style.opacity = "1";
   detail.style.opacity = "1";
   }, (timeout = 400));
-  
 });
+// Characters button event listener
 const detail = document.getElementById("detail");
 const personajesButton = document.getElementById("personajes");
 personajesButton.addEventListener("click", () => {
@@ -737,6 +735,7 @@ personajesButton.addEventListener("click", () => {
     next.style.opacity = "1";
   }, (timeout = 400));
 });
+// Planets button event listener
 const planetsButton = document.getElementById("planetas");
 planetsButton.addEventListener("click", () => {
   gallery.style.opacity = "0";
@@ -753,7 +752,7 @@ planetsButton.addEventListener("click", () => {
     next.style.opacity = "1";
   }, (timeout = 400));
 });
-
+// Episodes button event listener
 const episodesButton = document.getElementById("episodios");
 episodesButton.addEventListener("click", () => {
   gallery.style.opacity = "0";
