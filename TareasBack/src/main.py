@@ -1,18 +1,29 @@
-import json
+from tareas.DocumentController import get_tasks, set_tasks
+from pydantic import BaseModel
+
+class Tarea(BaseModel):
+    title: str
+    description: str
+    priority: str
+    completed: bool
+
+
 def main():
-    username = input("Please enter yout username: ")
-    tareas = input("Please enter your task: ")
-    set_tasks(username, tareas)
-    try:
-        with open(f"documents/{username}.json", "r", encoding="utf-8") as file:
-            print(f"Tasks for {username}: {json.load(file)}")
-    except FileNotFoundError:
-        print(f"No tasks found for {username}. Please set your tasks first.")
+    nueva_tarea = Tarea(
+    title="Nueva tarea",
+    description="Descripción de la nueva tarea",
+    priority="Alta",
+    completed=False
+)
+    username = "nestor"
+    print(get_tasks(username))
+   
+    new_func(username, nueva_tarea)
 
-def set_tasks(username, listado_tareas):
-    with open(f"documents/{username}.json", "w", encoding="utf-8") as file:
-        json.dump(listado_tareas, file)
-
+def new_func(username,nueva_tarea: Tarea):
+    tareas_actuales = get_tasks(username)
+    tareas_actuales.append(nueva_tarea.model_dump())  
+    set_tasks(username, tareas_actuales)
 
 
 if __name__ == "__main__":
