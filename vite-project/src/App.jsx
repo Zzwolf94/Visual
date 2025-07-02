@@ -3,7 +3,12 @@ import './App.css'
 import React from 'react';
 import Lista from './Lista.jsx';
 import Navbar from './Navbar.jsx';
-
+import Saludo from './Saludo.jsx';
+import MostrarTexto from '../componets/MostrarTexto.jsx';
+import Contador from '../componets/Contador.jsx';
+import BotonOnOff from '../componets/Boton.jsx';
+import ColorFondo from '../componets/ColorFondo.jsx';
+import Listas from '../componets/Listas.jsx';
 
 
 function App() {
@@ -16,15 +21,28 @@ const itemsCompra =
 
   return (
     <>
-    <Navbar />
+      <Navbar />
     <div className="app-container">
       <Lista items={itemsCompra} />
       <Lista items={itemsCompra} />
+    </div>
+    <div className="app-container">
+      <Saludo />
+      <MostrarTexto />
+    </div>
+    <div className="app-container">
+      <Contador />
+      <BotonOnOff />
+    </div>
+    <div className="app-container">
+      <ColorFondo />
+    </div>
+    <div className="app-container">
+      <Listas />
     </div>
     </>
   )
 }
 
 export default App
-
 

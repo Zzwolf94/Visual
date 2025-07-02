@@ -7,13 +7,14 @@ function Saludo() {
   return (
     <div className="saludo">
       <div className="input-container">
-        <label htmlFor="text">Nombre:</label>
+        <label htmlFor="text">Nombre: </label>
         <input
           type="text"
           id="text"
           value={input}
           onChange={e => setInput(e.target.value)}
         />
+        <br />
         <button onClick={() => setNombre(input)}>
           Enviar
         </button>
