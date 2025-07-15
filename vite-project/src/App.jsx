@@ -1,12 +1,15 @@
 import React from "react";
 import ListaContactos from "../components/ListaContactos.jsx";
-import { contactos } from "../data/contactos.jsx";
+import Contador from "../components/Contador.jsx";
+import Reloj from "../components/Reloj.jsx"
 
 function App() {
   return (
     <div className="App">
-      <h1>📇 Lista de Contactos</h1>
-      <ListaContactos contactos={contactos} soloActivos={false} />
+      <Contador/>
+      <div>
+        <Reloj/>
+      </div>
     </div>
   );
 }

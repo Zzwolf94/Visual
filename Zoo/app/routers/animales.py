@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, status
 from pydantic import ValidationError
 from ..models.animales import Animal
 
@@ -68,4 +68,27 @@ async def crear_animal(animal:Animal):
     }
 
 @router.put("/{animal_id}")
-async def modificar_animal(animal_id): ...
+async def modificar_animal(animal_id:int, animal:Animal):
+    animal_mod = animales_db[animal_id]
+    if (
+        len(animal_mod) == 0
+    ):  
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"La tarea con id {animal_id} no existe"
+        )
+    nuevos_datos = animal.model_dump(exclude_unset=True)
+    animal_mod.update(nuevos_datos)
+    animales_db[animal_id] = animal_mod
+    return animal_mod
+
+@router.delete("/{animal_id}")
+async def borrar_animal(animal_id: int):
+    animal_del = animales_db[animal_id]
+    if (len(animal_del)==0):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"La tarea con id {animal_id} no existe "
+        )
+    animales_db.pop(animal_id)
+    return f"se ha borrado el animal con id {animal_id}"

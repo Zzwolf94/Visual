@@ -1,19 +1,29 @@
 import "./Header.css";
-import { useState } from "react";
 
-function Header({carCount}) {
-  const [isClicked, setIsClicked] = useState(false);
+function Header({busqueda, setBusqueda, setbtnBusqueda}) {
+  const manejarCambio = (e) => {
+    setBusqueda(e.target.value);
+  };
+
+  const confirmarBusqueda = () =>{
+    setbtnBusqueda(busqueda)
+  }
+
+  const limpiarBusqueda =() => {
+    setbtnBusqueda("")
+  }
   return (
     <header>
       <div>
         <h1>E-Commerce</h1>
       </div>
       <div>
-        <input type="text" placeholder="Search"/>
-        <button onClick={()=>setIsClicked(!isClicked)}>buscar</button>
+        <input type="text" placeholder="Search" value={busqueda} onChange={manejarCambio}/>
+        <button onClick = {confirmarBusqueda}>buscar</button>
+        <button onClick = {limpiarBusqueda}>Limpiar Busqueda</button>
       </div>
       <div>
-        <button>Carrito{carCount}</button>
+        <button>Carrito</button>
       </div>
     </header>
   );
