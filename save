@@ -1,0 +1,264 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from typing import List, Optional
+from sqlalchemy import (
+    create_engine, Column, Integer, String, Table, ForeignKey
+)
+from sqlalchemy.orm import relationship, sessionmaker, declarative_base
+
+DATABASE_URL = "sqlite:///./test.db"
+
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+Base = declarative_base()
+
+# Tabla intermedia para relación muchos a muchos
+tarea_persona = Table(
+    'tarea_persona',
+    Base.metadata,
+    Column('tarea_id', Integer, ForeignKey('tareas.id')),
+    Column('persona_id', Integer, ForeignKey('personas.id'))
+)
+
+# Modelos SQLAlchemy
+
+class Persona(Base):
+    __tablename__ = 'personas'
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, index=True)
+    puesto = Column(String)
+    tareas = relationship('Tarea', secondary=tarea_persona, back_populates='personas')
+
+class Tarea(Base):
+    __tablename__ = 'tareas'
+    id = Column(Integer, primary_key=True, index=True)
+    nombre = Column(String, index=True)
+    importancia = Column(Integer)
+    completada = Column(Integer)  # 0 o 1
+    personas = relationship('Persona', secondary=tarea_persona, back_populates='tareas')
+
+# Crear tablas
+Base.metadata.create_all(bind=engine)
+
+# Esquemas Pydantic
+
+class PersonaBase(BaseModel):
+    nombre: Optional[str] = None
+    puesto: Optional[str] = None
+
+class PersonaCreate(PersonaBase):
+    nombre: str
+    puesto: str
+
+class PersonaUpdate(PersonaBase):
+    pass
+
+class PersonaResponse(PersonaBase):
+    id: int
+    tareas: List[int] = []
+
+    class Config:
+        orm_mode = True
+
+class TareaBase(BaseModel):
+    nombre: Optional[str] = None
+    importancia: Optional[int] = None
+    completada: Optional[int] = None
+    personas: Optional[List[int]] = []
+
+class TareaCreate(TareaBase):
+    nombre: str
+    importancia: int
+    completada: int = 0  # por defecto no completada
+
+class TareaUpdate(TareaBase):
+    pass
+
+class TareaResponse(TareaBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+app = FastAPI()
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+# Helper para convertir objetos relacionados a listas de IDs
+def persona_ids(personas):
+    return [p.id for p in personas]
+
+def tarea_ids(tareas):
+    return [t.id for t in tareas]
+
+# --- CRUD Personas ---
+
+@app.post("/personas/", response_model=PersonaResponse)
+def create_persona(persona: PersonaCreate):
+    db = next(get_db())
+    db_persona = Persona(nombre=persona.nombre, puesto=persona.puesto)
+    db.add(db_persona)
+    db.commit()
+    db.refresh(db_persona)
+    return PersonaResponse(
+        id=db_persona.id,
+        nombre=db_persona.nombre,
+        puesto=db_persona.puesto,
+        tareas=tarea_ids(db_persona.tareas)
+    )
+
+@app.get("/personas/", response_model=List[PersonaResponse])
+def read_personas():
+    db = next(get_db())
+    personas = db.query(Persona).all()
+    return [
+        PersonaResponse(
+            id=p.id,
+            nombre=p.nombre,
+            puesto=p.puesto,
+            tareas=tarea_ids(p.tareas)
+        )
+        for p in personas
+    ]
+
+@app.get("/personas/{persona_id}", response_model=PersonaResponse)
+def read_persona(persona_id: int):
+    db = next(get_db())
+    p = db.query(Persona).filter(Persona.id == persona_id).first()
+    if not p:
+        raise HTTPException(status_code=404, detail="Persona no encontrada")
+    return PersonaResponse(
+        id=p.id,
+        nombre=p.nombre,
+        puesto=p.puesto,
+        tareas=tarea_ids(p.tareas)
+    )
+
+@app.put("/personas/{persona_id}", response_model=PersonaResponse)
+def update_persona(persona_id: int, persona: PersonaUpdate):
+    db = next(get_db())
+    db_persona = db.query(Persona).filter(Persona.id == persona_id).first()
+    if not db_persona:
+        raise HTTPException(status_code=404, detail="Persona no encontrada")
+
+    if persona.nombre is not None:
+        db_persona.nombre = persona.nombre
+    if persona.puesto is not None:
+        db_persona.puesto = persona.puesto
+
+    db.commit()
+    db.refresh(db_persona)
+    return PersonaResponse(
+        id=db_persona.id,
+        nombre=db_persona.nombre,
+        puesto=db_persona.puesto,
+        tareas=tarea_ids(db_persona.tareas)
+    )
+
+@app.delete("/personas/{persona_id}")
+def delete_persona(persona_id: int):
+    db = next(get_db())
+    db_persona = db.query(Persona).filter(Persona.id == persona_id).first()
+    if not db_persona:
+        raise HTTPException(status_code=404, detail="Persona no encontrada")
+    db.delete(db_persona)
+    db.commit()
+    return {"detail": "Persona eliminada"}
+
+# --- CRUD Tareas ---
+
+@app.post("/tareas/", response_model=TareaResponse)
+def create_tarea(tarea: TareaCreate):
+    db = next(get_db())
+    # Obtener personas asignadas
+    personas = []
+    if tarea.personas:
+        personas = db.query(Persona).filter(Persona.id.in_(tarea.personas)).all()
+    db_tarea = Tarea(
+        nombre=tarea.nombre,
+        importancia=tarea.importancia,
+        completada=tarea.completada,
+        personas=personas
+    )
+    db.add(db_tarea)
+    db.commit()
+    db.refresh(db_tarea)
+    return TareaResponse(
+        id=db_tarea.id,
+        nombre=db_tarea.nombre,
+        importancia=db_tarea.importancia,
+        completada=db_tarea.completada,
+        personas=persona_ids(db_tarea.personas)
+    )
+
+@app.get("/tareas/", response_model=List[TareaResponse])
+def read_tareas():
+    db = next(get_db())
+    tareas = db.query(Tarea).all()
+    return [
+        TareaResponse(
+            id=t.id,
+            nombre=t.nombre,
+            importancia=t.importancia,
+            completada=t.completada,
+            personas=persona_ids(t.personas)
+        )
+        for t in tareas
+    ]
+
+@app.get("/tareas/{tarea_id}", response_model=TareaResponse)
+def read_tarea(tarea_id: int):
+    db = next(get_db())
+    t = db.query(Tarea).filter(Tarea.id == tarea_id).first()
+    if not t:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    return TareaResponse(
+        id=t.id,
+        nombre=t.nombre,
+        importancia=t.importancia,
+        completada=t.completada,
+        personas=persona_ids(t.personas)
+    )
+
+@app.put("/tareas/{tarea_id}", response_model=TareaResponse)
+def update_tarea(tarea_id: int, tarea: TareaUpdate):
+    db = next(get_db())
+    db_tarea = db.query(Tarea).filter(Tarea.id == tarea_id).first()
+    if not db_tarea:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+
+    if tarea.nombre is not None:
+        db_tarea.nombre = tarea.nombre
+    if tarea.importancia is not None:
+        db_tarea.importancia = tarea.importancia
+    if tarea.completada is not None:
+        db_tarea.completada = tarea.completada
+    if tarea.personas is not None:
+        # Actualizar asignación de personas
+        personas = db.query(Persona).filter(Persona.id.in_(tarea.personas)).all()
+        db_tarea.personas = personas
+
+    db.commit()
+    db.refresh(db_tarea)
+    return TareaResponse(
+        id=db_tarea.id,
+        nombre=db_tarea.nombre,
+        importancia=db_tarea.importancia,
+        completada=db_tarea.completada,
+        personas=persona_ids(db_tarea.personas)
+    )
+
+@app.delete("/tareas/{tarea_id}")
+def delete_tarea(tarea_id: int):
+    db = next(get_db())
+    db_tarea = db.query(Tarea).filter(Tarea.id == tarea_id).first()
+    if not db_tarea:
+        raise HTTPException(status_code=404, detail="Tarea no encontrada")
+    db.delete(db_tarea)
+    db.commit()
+    return {"detail": "Tarea eliminada"}
